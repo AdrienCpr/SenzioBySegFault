@@ -1,38 +1,54 @@
+
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Rapport de bug
+about: Signaler un bug pour nous aider à améliorer le projet
 title: ''
-labels: ''
+labels: 'bug'
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Description du bug
+Décrivez de manière claire et concise le bug rencontré.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+## Étapes pour reproduire le bug
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+Indiquez les étapes permettant de reproduire le problème :
+1. Aller sur « ... »
+2. Cliquer sur « ... »
+3. Faire défiler jusqu'à « ... »
+4. Constater l'erreur
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+## Comportement attendu
+Décrivez de manière claire et concise ce qui devrait normalement se produire.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+## Captures d'écran
+Si nécessaire, ajoutez des captures d'écran pour aider à comprendre le problème.
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+## Environnement — Ordinateur
+Veuillez compléter les informations suivantes :
+- Système d'exploitation : [ex. Windows 11, macOS]
+- Navigateur : [ex. Chrome, Firefox, Safari]
+- Version du navigateur : [ex. 120]
 
-**Additional context**
-Add any other context about the problem here.
+## Environnement — Smartphone
+Veuillez compléter les informations suivantes :
+- Appareil : [ex. iPhone 15, Samsung Galaxy S24]
+- Système d'exploitation : [ex. iOS 18, Android 15]
+- Navigateur : [ex. Safari, Chrome]
+- Version du navigateur : [ex. 120]
+
+## Informations complémentaires
+Ajoutez toute autre information utile à la compréhension du problème (messages d'erreur, journaux, contexte particulier, etc.).
+
+## Critères de Fin (Definition of Done)
+- [ ] La cause du bug a été identifiée et comprise.
+- [ ] La correction a été implémentée.
+- [ ] Le comportement attendu est rétabli.
+- [ ] Le bug ne peut plus être reproduit dans les conditions initiales.
+- [ ] Un test de non-régression a été ajouté, si applicable.
+- [ ] Les tests existants ont été exécutés avec succès.
+- [ ] Aucun nouveau bug bloquant n'a été introduit.
+- [ ] Le code a été relu et validé via une Pull Request, si applicable.
+- [ ] La documentation concernée a été mise à jour, si nécessaire.
+- [ ] La correction a été intégrée et vérifiée dans l'environnement approprié.
