@@ -1,11 +1,3 @@
----
-name: Pull request
-about: Create a pull request for this project
-title: ''
-labels: ''
-assignees: AdrienCpr
-
----
 
 ## Description
 
@@ -13,7 +5,7 @@ Décrivez brièvement l'objectif de cette Pull Request et les modifications appo
 
 ## Issue associée
 
-Closes #123
+Closes #
 
 ## Type de modification
 

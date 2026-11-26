@@ -1,0 +1,93 @@
+# VM A - Application (e2-standard-2, 10.10.0.10, IP publique APP)
+# Images tirées d'Artifact Registry et déployées par digest (voir .env.example).
+name: chatisen-app
+
+services:
+  traefik:
+    image: traefik:v3.3
+    restart: unless-stopped
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.le.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/letsencrypt
+    networks: [edge]
+
+  frontend:
+    image: ${FRONTEND_IMAGE}
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=Host(`${APP_DOMAIN}`)
+      - traefik.http.routers.frontend.entrypoints=websecure
+      - traefik.http.routers.frontend.tls.certresolver=le
+    networks: [edge]
+
+  backend:
+    image: ${BACKEND_IMAGE}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://${DB_USER}@cloudsql-proxy:5432/${DB_NAME}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`${APP_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/socket.io`))
+      - traefik.http.routers.backend.entrypoints=websecure
+      - traefik.http.routers.backend.tls.certresolver=le
+      - traefik.http.services.backend.loadbalancer.server.port=3000
+    depends_on: [cloudsql-proxy]
+    networks: [edge, private]
+
+  cloudsql-proxy:
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.14.3
+    restart: unless-stopped
+    command:
+      - --address=0.0.0.0
+      - --port=5432
+      - --private-ip
+      - --auto-iam-authn
+      - ${CLOUDSQL_INSTANCE}
+    networks: [private]
+
+  worker-qos:
+    image: ${WORKER_QOS_IMAGE}
+    restart: unless-stopped
+    profiles: [qos]
+    networks: [private]
+
+  # --- Observabilité (accès opérations uniquement, via tunnel IAP) ---
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    restart: unless-stopped
+    networks: [private]
+
+  loki:
+    image: grafana/loki:3.4.2
+    restart: unless-stopped
+    networks: [private]
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3001:3000" # non exposé publiquement, accès par tunnel IAP
+    networks: [private]
+
+networks:
+  edge: {}
+  private:
+    internal: false
+
+volumes:
+  letsencrypt: {}
