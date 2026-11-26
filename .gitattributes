@@ -1,0 +1,6 @@
+# Normalise les fins de ligne (équipe Windows / Linux, CI Linux)
+* text=auto eol=lf
+*.{cmd,bat,ps1} text eol=crlf
+*.png binary
+*.jpg binary
+*.drawio text

@@ -1,0 +1,60 @@
+# Environnement de développement local.
+#   docker compose up -d              -> PostgreSQL + MinIO (remplace Cloud SQL / Cloud Storage)
+#   docker compose --profile app up   -> + backend, frontend et worker QoS buildés localement
+name: chatisen-dev
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: chatisen
+      POSTGRES_PASSWORD: chatisen
+      POSTGRES_DB: chatisen
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatisen"]
+      interval: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: chatisen
+      MINIO_ROOT_PASSWORD: chatisen-dev
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+
+  backend:
+    profiles: [app]
+    build: ./apps/backend
+    environment:
+      DATABASE_URL: postgres://chatisen:chatisen@postgres:5432/chatisen
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    profiles: [app]
+    build: ./apps/frontend
+    ports:
+      - "8080:80"
+
+  worker-qos:
+    profiles: [app]
+    build: ./services/worker-qos
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata: {}
+  miniodata: {}

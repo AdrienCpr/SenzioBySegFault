@@ -1,0 +1,13 @@
+[project]
+name = "chatisen-worker-qos"
+version = "0.1.0"
+description = "ChatISEN - Worker Python QoS"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]

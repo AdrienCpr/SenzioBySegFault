@@ -1,0 +1,21 @@
+# VM B - Relais média (e2-medium, 10.10.0.20, IP publique TURN)
+# coturn en réseau hôte : 3478 TCP/UDP + relais UDP 49160-49259, métriques 9641 (privé).
+name: chatisen-turn
+
+services:
+  coturn:
+    image: coturn/coturn:4.6
+    restart: unless-stopped
+    network_mode: host
+    command:
+      - --realm=${TURN_DOMAIN}
+      - --use-auth-secret
+      - --static-auth-secret=${TURN_HMAC_SECRET}
+      - --listening-port=3478
+      - --min-port=49160
+      - --max-port=49259
+      - --external-ip=${TURN_PUBLIC_IP}/10.10.0.20
+      - --prometheus
+      - --no-cli
+      - --no-tls
+      - --no-dtls

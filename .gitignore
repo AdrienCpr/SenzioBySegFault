@@ -19,6 +19,12 @@ venv/
 !terraform.tfvars.example
 
 # IDE & OS
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 .DS_Store
 Thumbs.db
+
+# Tests / outils
+.pytest_cache/
+.ruff_cache/
+coverage/
