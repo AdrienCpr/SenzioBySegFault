@@ -1,4 +1,3 @@
-
 ---
 name: Demande de fonctionnalité
 about: Proposer une nouvelle fonctionnalité pour le projet
